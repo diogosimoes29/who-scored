@@ -7,7 +7,12 @@
       "Bash(npm install *)",
       "Bash(npm run *)",
       "Bash(git add *)",
-      "Bash(git commit -q -m ' *)"
+      "Bash(git commit -q -m ' *)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' https://raw.githubusercontent.com/openfootball/worldcup.json/master/__TRACKED_VAR__/worldcup.json)",
+      "Bash(cd /tmp)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/openfootball/worldcup.json/master/2010/worldcup.json\" -o 2010.json)",
+      "Bash(node -e ' *)",
+      "Bash(node *)"
     ]
   }
 }
