@@ -1,17 +1,80 @@
-// Placeholder do Passo 1 — verifica tokens e fontes. Substituído pela máquina
-// de estados (home → playing → result) no Passo 5.
+// Máquina de estados (DESIGN.md): home → playing → result → home | playing.
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { HomeScreen } from "./components/HomeScreen";
+import { GameScreen } from "./components/GameScreen";
+import { ResultScreen } from "./components/ResultScreen";
+import { useMatchPool } from "./hooks/useMatchPool";
+import { useGame } from "./hooks/useGame";
+import { useStats } from "./hooks/useStats";
+import { createPlayerSearch } from "./lib/search";
+import type { PlayerEntry } from "./types";
+import playersData from "./data/players.json";
+
+type Screen = "home" | "playing" | "result";
+
+const REVEAL_DELAY = 900; // ms a mostrar o último golo antes do resultado
+
 export default function App() {
+  const pool = useMatchPool();
+  const { stats, record } = useStats();
+  const search = useMemo(
+    () => createPlayerSearch(playersData as PlayerEntry[]),
+    []
+  );
+
+  const [screen, setScreen] = useState<Screen>("home");
+  const [match, setMatch] = useState(() => pool.next());
+  const game = useGame(match);
+  const recorded = useRef(false);
+
+  const startNew = () => {
+    recorded.current = false;
+    setMatch(pool.next());
+    setScreen("playing");
+  };
+
+  // Fim de jogo: regista estatística uma vez e transita para o resultado.
+  const { status } = game.state;
+  useEffect(() => {
+    if (screen !== "playing") return;
+    if (status === "playing") return;
+    if (!recorded.current) {
+      record(status === "won");
+      recorded.current = true;
+    }
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    const delay = status === "won" && !reduce ? REVEAL_DELAY : 0;
+    const t = window.setTimeout(() => setScreen("result"), delay);
+    return () => window.clearTimeout(t);
+  }, [screen, status, record]);
+
+  if (screen === "home") {
+    return <HomeScreen stats={stats} onPlay={startNew} />;
+  }
+
+  if (screen === "result") {
+    return (
+      <ResultScreen
+        match={match}
+        found={game.found}
+        wrongGuesses={game.state.wrongGuesses}
+        onPlayAgain={startNew}
+        onHome={() => setScreen("home")}
+      />
+    );
+  }
+
   return (
-    <main className="min-h-dvh bg-bg text-chalk flex flex-col items-center justify-center gap-6 p-6">
-      <h1 className="font-display font-bold uppercase tracking-[0.12em] text-[54px] leading-none scoreboard-glow">
-        Quem Marcou?
-      </h1>
-      <div className="scanlines rounded-placard border border-line bg-bg2 px-8 py-5">
-        <p className="font-mono text-4xl scoreboard-glow">3–3</p>
-      </div>
-      <p className="font-body text-[15px] text-muted max-w-xs text-center">
-        Scaffold pronto. Tokens, fontes e Tailwind ligados.
-      </p>
-    </main>
+    <GameScreen
+      state={game.state}
+      found={game.found}
+      total={game.total}
+      search={search}
+      onGuess={game.guess}
+      onGiveUp={game.giveUp}
+    />
   );
 }
