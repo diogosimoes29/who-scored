@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { normalize } from "../src/lib/normalize.ts";
 import { teamInfo } from "../src/data/teams-pt.ts";
+import { PLAYER_ALIASES } from "../src/data/player-aliases.ts";
 import type { Goal, Match, PlayerEntry, Score } from "../src/types.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -92,10 +93,14 @@ function goalsOf(m: RawMatch): Goal[] {
   ] as const) {
     for (const g of list ?? []) {
       if (!g.name) continue; // sem marcador identificável → ignora
+      // Canonicaliza variantes do mesmo jogador (ver player-aliases.ts).
+      const rawKey = normalize(g.name);
+      const canonical = PLAYER_ALIASES[rawKey];
+      const name = canonical ?? g.name;
       const goal: Goal = {
         team,
-        name: g.name,
-        key: normalize(g.name),
+        name,
+        key: canonical ? normalize(canonical) : rawKey,
         minute: minuteOf(g),
       };
       if (g.penalty) goal.penalty = true;
@@ -213,6 +218,48 @@ async function main() {
       `\n⚠ Equipas sem tradução em teams-pt.ts (${unknownTeams.size}):`
     );
     console.warn("  " + [...unknownTeams].sort().join(", "));
+  }
+
+  warnNameVariants(players);
+}
+
+/**
+ * Avisa sobre prováveis variantes do mesmo jogador ainda não resolvidas em
+ * player-aliases.ts: pares onde os tokens de uma entrada são subconjunto da
+ * outra (ex.: "Messi" ⊂ "Lionel Messi"). Jogadores distintos com o mesmo
+ * apelido (Ferran/Fernando Torres) não têm esta relação → não aparecem.
+ */
+function warnNameVariants(players: PlayerEntry[]) {
+  const tokensOf = (k: string) => new Set(k.split(" "));
+  const isSubset = (a: Set<string>, b: Set<string>) =>
+    [...a].every((t) => b.has(t));
+
+  const byLast = new Map<string, PlayerEntry[]>();
+  for (const p of players) {
+    const toks = p.key.split(" ");
+    const last = toks[toks.length - 1]!;
+    (byLast.get(last) ?? byLast.set(last, []).get(last)!).push(p);
+  }
+
+  const pairs: string[] = [];
+  for (const arr of byLast.values()) {
+    if (arr.length < 2) continue;
+    for (let i = 0; i < arr.length; i++)
+      for (let j = i + 1; j < arr.length; j++) {
+        const a = tokensOf(arr[i]!.key);
+        const b = tokensOf(arr[j]!.key);
+        const [short, long] =
+          a.size <= b.size ? [arr[i]!, arr[j]!] : [arr[j]!, arr[i]!];
+        if (isSubset(tokensOf(short.key), tokensOf(long.key)))
+          pairs.push(`"${short.label}" ⊂ "${long.label}"`);
+      }
+  }
+
+  if (pairs.length) {
+    console.warn(
+      `\n⚠ Possíveis variantes do mesmo jogador (rever player-aliases.ts) (${pairs.length}):`
+    );
+    for (const p of pairs.sort()) console.warn("  " + p);
   }
 }
 
