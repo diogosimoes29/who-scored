@@ -85,10 +85,10 @@ export function PlayerSearch({ search, onGuess, disabled }: Props) {
                     spellCheck={false}
                     disabled={disabled}
                     value={query}
-                    aria-label="Procurar jogador"
+                    aria-label="Search Player"
                     aria-autocomplete="list"
                     aria-controls={listId}
-                    placeholder="Procurar jogador…"
+                    placeholder="Search Player"
                     onChange={(e) => {
                         setQuery(e.target.value);
                         setOpen(true);
@@ -104,7 +104,7 @@ export function PlayerSearch({ search, onGuess, disabled }: Props) {
                     onClick={() => submit(query)}
                     className="shrink-0 rounded-xl bg-amber px-5 py-3 font-display font-semibold uppercase tracking-[0.1em] text-[14px] text-ink shadow-cta transition-opacity disabled:opacity-40 disabled:shadow-none"
                 >
-                    Adivinhar
+                    Guess
                 </button>
             </div>
         </div>

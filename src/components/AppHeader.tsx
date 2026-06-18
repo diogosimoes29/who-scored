@@ -20,7 +20,7 @@ export function AppHeader({
                 <button
                     type="button"
                     onClick={onHome}
-                    aria-label="Início"
+                    aria-label="Home"
                     className="rounded-xl border border-line bg-panel p-2 text-muted hover:border-amber hover:text-chalk"
                 >
                 <HomeIcon />
@@ -28,7 +28,7 @@ export function AppHeader({
             </div>
 
             <h1 className="font-display text-[15px] font-bold uppercase tracking-[0.12em] scoreboard-glow">
-                Quem Marcou?
+                Who Scored?
             </h1>
 
             <div className="flex items-center justify-end gap-2">
@@ -50,7 +50,7 @@ function StreakCounter({ streak }: { streak: number }) {
     return (
         <span
             className="flex items-center gap-1 font-mono"
-            aria-label={`Sequência: ${streak}`}
+            aria-label={`Streak: ${streak}`}
         >
             <span
                 className={`${size} leading-none ${streak <= 0 ? "opacity-40 grayscale" : ""}`}

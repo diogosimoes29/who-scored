@@ -60,18 +60,18 @@ export function ResultScreen({
 
             <div className="text-center">
                 <p className="font-mono text-[15px] text-amber-soft">
-                    {result.found} de {result.total} marcadores
+                    {result.found} of {result.total} goalscorers
                     {result.completed ? " ✓" : ""}
                 </p>
                 <p
                     className="mt-1 text-2xl scoreboard-glow"
-                    aria-label={`Pontuação: ${result.stars} de 3 estrelas`}
+                    aria-label={`Score: ${result.stars} of 3 stars`}
                 >
                     {"★".repeat(result.stars)}
                     <span className="text-muted/50">{"★".repeat(3 - result.stars)}</span>
                 </p>
                 <p className="mt-1 font-mono text-[12px] text-muted">
-                    {result.percent}% de precisão · {result.wrongGuesses} erro
+                    {result.percent}% of precision · {result.wrongGuesses} error
                     {result.wrongGuesses === 1 ? "" : "s"}
                 </p>
             </div>
@@ -97,7 +97,7 @@ export function ResultScreen({
             {wrongGuesses.length > 0 && (
                 <div className="font-mono text-[12px] text-muted">
                 <span className="uppercase tracking-[0.15em] text-[11px]">
-                    Palpites errados ({wrongGuesses.length})
+                    Wrong guesses ({wrongGuesses.length})
                 </span>
                 <div className="mt-1">
                     <WrongGuesses guesses={wrongGuesses} />
@@ -111,7 +111,7 @@ export function ResultScreen({
                     onClick={onPlayAgain}
                     className="rounded-xl bg-amber px-6 py-3.5 font-display text-[15px] font-semibold uppercase tracking-[0.12em] text-bg shadow-cta"
                 >
-                    Próximo
+                    Next
                 </button>
                 <div className="flex gap-2">
                 <button
@@ -119,14 +119,14 @@ export function ResultScreen({
                     onClick={share}
                     className="flex-1 rounded-xl border border-line bg-panel px-6 py-3 font-display text-[14px] font-semibold uppercase tracking-[0.12em] text-chalk hover:border-amber"
                 >
-                    {shared ? "Copiado!" : "Partilhar"}
+                    {shared ? "Copied!" : "Share"}
                 </button>
                 <button
                     type="button"
                     onClick={onHome}
                     className="rounded-xl border border-line bg-panel px-6 py-3 font-display text-[14px] font-semibold uppercase tracking-[0.12em] text-muted hover:text-chalk"
                 >
-                    Início
+                    Home
                 </button>
                 </div>
             </div>

@@ -25,7 +25,7 @@ export type Match = {
   group?: string;
   ground: string;
   team1: string;
-  team2: string; // nomes em PT (via teams-pt.ts)
+  team2: string; // nomes em inglês (via teams.ts)
   iso1?: string;
   iso2?: string; // código p/ bandeira
   score: Score;

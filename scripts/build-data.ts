@@ -3,7 +3,7 @@
 // 1. Para cada ano 1930…2026 faz fetch do worldcup.json (raw GitHub).
 // 2. Mapeia cada jogo para o tipo Match; achata goals1/goals2 em goals[].
 // 3. Filtra jogos sem golos / sem marcadores.
-// 4. Traduz team1/team2 para PT-PT + ISO via teams-pt.ts.
+// 4. Mapeia team1/team2 para nome (inglês) + ISO via teams.ts.
 // 5. Escreve src/data/matches.json e src/data/players.json (dedup por key).
 //
 // NÃO é executado em runtime — só com `npm run build:data`.
@@ -12,7 +12,7 @@ import { writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { normalize } from "../src/lib/normalize.ts";
-import { teamInfo } from "../src/data/teams-pt.ts";
+import { teamInfo } from "../src/data/teams.ts";
 import { PLAYER_ALIASES } from "../src/data/player-aliases.ts";
 import type { Goal, Match, PlayerEntry, Score } from "../src/types.ts";
 
@@ -143,8 +143,8 @@ function toMatch(
     date: raw.date ?? "",
     round,
     ground: groundOf(raw),
-    team1: t1?.pt ?? raw.team1,
-    team2: t2?.pt ?? raw.team2,
+    team1: t1?.en ?? raw.team1,
+    team2: t2?.en ?? raw.team2,
     score: scoreOf(raw),
     goals,
   };
@@ -215,7 +215,7 @@ async function main() {
 
   if (unknownTeams.size) {
     console.warn(
-      `\n⚠ Equipas sem tradução em teams-pt.ts (${unknownTeams.size}):`
+      `\n⚠ Equipas sem entrada em teams.ts (${unknownTeams.size}):`
     );
     console.warn("  " + [...unknownTeams].sort().join(", "));
   }

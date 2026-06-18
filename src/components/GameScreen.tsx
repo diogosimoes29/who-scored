@@ -51,8 +51,8 @@ export function GameScreen({
         if (r.type === "noop") return r;
         setToast(
             r.type === "hit"
-                ? { text: "Certo!", tone: "hit" }
-                : { text: "Não foi esse", tone: "miss" }
+                ? { text: "Correct!", tone: "hit" }
+                : { text: "Wrong guess", tone: "miss" }
         );
         window.clearTimeout(timer.current);
         timer.current = window.setTimeout(() => setToast(null), 1600);
@@ -71,10 +71,10 @@ export function GameScreen({
 
             <div className="flex items-center justify-between">
                 <h2 className="font-display uppercase tracking-[0.2em] text-[11px] text-muted">
-                    Marcadores
+                    Goalscorers
                 </h2>
                 <span className="font-mono text-[13px] text-amber-soft">
-                    {found} de {total}
+                    {found} of {total}
                 </span>
             </div>
 
@@ -99,10 +99,9 @@ export function GameScreen({
                         <HardCards wrong={wrongGuesses.length} />
                     ) : (
                         <span className="min-w-0">
-                            Palpites errados: <span className="text-red">{wrongGuesses.length}</span>
+                            Wrong guesses: <span className="text-red">{wrongGuesses.length}</span>
                         </span>
                     )}
-                    {/* região viva para anunciar feedback a leitores de ecrã */}
                     <span
                         aria-live="polite"
                         className={`min-h-[1.2em] shrink-0 ${
@@ -140,17 +139,16 @@ export function GameScreen({
                     disabled={status !== "playing"}
                     className="rounded-xl bg-red px-6 py-3.5 font-display text-[15px] font-semibold uppercase tracking-[0.12em] text-ink shadow-[0_0_28px_rgba(255,91,91,.35)] disabled:opacity-40"
                 >
-                    Desistir
+                    Give Up
                 </button>
             </div>
         </section>
     );
 }
 
-/** Indicador de cartões no modo difícil: 🟨 ao 1.º erro, 🟥 ao 2.º (fim). */
 function HardCards({ wrong }: { wrong: number }) {
     return (
-        <span className="flex items-center gap-2" aria-label={`Cartões: ${wrong} de 2`}>
+        <span className="flex items-center gap-2" aria-label={`Cards: ${wrong} of 2`}>
             <span className={`text-base leading-none ${wrong >= 1 ? "" : "opacity-20 grayscale"}`} role="img" aria-hidden="true">🟨</span>
             <span className={`text-base leading-none ${wrong >= 2 ? "" : "opacity-20 grayscale"}`} role="img" aria-hidden="true">🟥</span>
         </span>

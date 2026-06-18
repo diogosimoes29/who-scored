@@ -1,63 +1,51 @@
-// Helpers de apresentação puros (datas, placard, etiquetas, bandeiras).
-
 import type { Goal, Match, Score } from "../types";
 
-const MESES = [
-  "jan", "fev", "mar", "abr", "mai", "jun",
-  "jul", "ago", "set", "out", "nov", "dez",
+const MONTHS = [
+    "jan", "feb", "mar", "apr", "may", "jun",
+    "jul", "aug", "sep", "oct", "nov", "dec",
 ];
 
-/** "2022-12-18" → "18 dez 2022". */
 export function formatDate(iso: string): string {
-  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
-  if (!m) return iso;
-  const [, y, mo, d] = m;
-  const mes = MESES[Number(mo) - 1] ?? mo;
-  return `${Number(d)} ${mes} ${y}`;
+    const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+    if (!m) return iso;
+    const [, y, mo, d] = m;
+    const mes = MONTHS[Number(mo) - 1] ?? mo;
+    return `${Number(d)} ${mes} ${y}`;
 }
 
-/** Resultado principal do placard (prolongamento se existir, senão t. regul.). */
 export function mainScore(score: Score): string {
-  const [a, b] = score.et ?? score.ft;
-  return `${a}–${b}`;
+    const [a, b] = score.et ?? score.ft;
+    return `${a}–${b}`;
 }
 
-/** Legenda do desempate: "4–2 g.p." ou "a.p." (após prolongamento). */
 export function scoreNote(score: Score): string | null {
-  if (score.p) return `${score.p[0]}–${score.p[1]} g.p.`;
-  if (score.et) return "a.p.";
-  return null;
+    if (score.p) return `${score.p[0]}–${score.p[1]} pens`;
+    if (score.et) return "AET";
+    return null;
 }
 
-/** Etiqueta curta da equipa para o slot (AR, FR, ENG…). */
 export function teamTag(name: string, iso?: string): string {
-  if (iso) {
-    const sub = iso.split("-")[1];
-    if (sub) return sub.toUpperCase(); // gb-eng → ENG
-    return iso.toUpperCase(); // ar → AR
-  }
-  return name.slice(0, 3).toUpperCase();
+    if (iso) {
+        const sub = iso.split("-")[1];
+        if (sub) return sub.toUpperCase();
+        return iso.toUpperCase();
+    }
+    return name.slice(0, 3).toUpperCase();
 }
 
-/**
- * URL da bandeira (flagcdn.com, SVG) a partir do código ISO. Suporta
- * subdivisões (gb-eng, gb-sct…). Emojis de bandeira não renderizam no
- * Windows/Chrome, por isso usamos imagens. Devolve null se não houver ISO.
- */
+
 export function flagUrl(iso?: string): string | null {
-  if (!iso) return null;
-  return `https://flagcdn.com/${iso.toLowerCase()}.svg`;
+    if (!iso) return null;
+    return `https://flagcdn.com/${iso.toLowerCase()}.svg`;
 }
 
-/** Etiquetas de um golo: "(g.p.)" penálti, "(p.b.)" autogolo. */
 export function goalTags(goal: Goal): string {
-  const tags: string[] = [];
-  if (goal.penalty) tags.push("g.p.");
-  if (goal.ownGoal) tags.push("p.b.");
-  return tags.length ? ` (${tags.join(", ")})` : "";
+    const tags: string[] = [];
+    if (goal.penalty) tags.push("pen.");
+    if (goal.ownGoal) tags.push("OG");
+    return tags.length ? ` (${tags.join(", ")})` : "";
 }
 
-/** "Final", "Matchday 1 · Grupo A"… para o cabeçalho. */
 export function roundLabel(match: Match): string {
-  return match.group ? `${match.round} · ${match.group}` : match.round;
+    return match.group ? `${match.round} · ${match.group}` : match.round;
 }

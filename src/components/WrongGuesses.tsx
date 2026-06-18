@@ -34,7 +34,7 @@ export function WrongGuesses({ guesses }: { guesses: string[] }) {
                     type="button"
                     onClick={() => setOpen((v) => !v)}
                     aria-expanded={open}
-                    aria-label={`Mostrar mais ${hidden.length} palpites errados`}
+                    aria-label={`Show ${hidden.length} more wrong guesses`}
                     className="shrink-0 rounded-md border border-line bg-panel px-1.5 py-0.5 text-[11px] text-muted hover:border-amber hover:text-chalk"
                 >
                     +{hidden.length}

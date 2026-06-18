@@ -21,17 +21,17 @@
 /* ── Tema claro (stadium-day) — ativado por .light no <html> ───────────────── */
 html.light {
   color-scheme: light;
-  --bg: #eef2ef; /* fundo base claro */
+  --bg: #f4f5f7; /* fundo base (branco-neutro) */
   --bg2: #ffffff; /* fundo de cartão */
   --panel: #ffffff; /* painéis, slots, inputs */
-  --panel2: #f4f7f5; /* painel elevado */
-  --line: #d2ddd6; /* bordas/divisórias */
+  --panel2: #f1f3f5; /* painel elevado */
+  --line: #dadfe4; /* bordas/divisórias (cinzento neutro) */
   --amber: #f0a000; /* acento principal (um pouco mais escuro p/ contraste) */
   --amber-soft: #9a6a00; /* âmbar legível como texto em fundo claro */
   --lime: #128a4d; /* sucesso legível em claro */
   --red: #d33b3b; /* erro legível em claro */
-  --chalk: #0f1a16; /* texto principal escuro */
-  --muted: #5b6f65; /* texto secundário */
+  --chalk: #11151b; /* texto principal escuro (neutro) */
+  --muted: #5c6470; /* texto secundário (cinzento neutro) */
 }
 
 @layer base {

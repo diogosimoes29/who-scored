@@ -22,8 +22,8 @@ export function HomeScreen({ onPlay, stats, theme, onToggleTheme }: Props) {
         <section className="mx-auto flex h-dvh w-full max-w-5xl flex-col overflow-hidden px-4 py-5">
             <div className="flex items-center justify-between">
                 <span
-                    className="flex items-center gap-1.5 font-mono text-[14px] text-amber-soft"
-                    aria-label={`Melhor sequência: ${stats.best}`}
+                    className="flex items-center gap-1.5 rounded-xl border border-line bg-panel px-2.5 py-2 font-mono text-[14px] text-amber-soft"
+                    aria-label={`Best streak: ${stats.best}`}
                 >
                     <span className="text-xl leading-none" role="img" aria-hidden="true">
                         🏆
@@ -37,18 +37,18 @@ export function HomeScreen({ onPlay, stats, theme, onToggleTheme }: Props) {
                 <div className="flex min-h-full flex-col items-center justify-center gap-8 py-6 text-center">
                     <div className="flex flex-col items-center gap-4">
                         <h1 className="font-display text-[clamp(40px,14vw,54px)] font-bold uppercase leading-none tracking-[0.06em] scoreboard-glow">
-                            Quem Marcou?
+                            Who Scored?
                         </h1>
                         <p className="max-w-xs font-body text-[15px] leading-relaxed text-muted">
-                            Vês um jogo de Mundial — as equipas, a data e o resultado.
-                            Adivinha quem marcou os golos.
+                            You get a World Cup game. See the teams, date and result.
+                            Guess the goalscorers.
                         </p>
                     </div>
 
                     <div className="flex w-full flex-col gap-5">
                         <fieldset className="flex flex-col gap-2">
                             <legend className="mb-2 font-display uppercase tracking-[0.2em] text-[11px] text-muted">
-                                Dificuldade
+                                Difficulty
                             </legend>
                             <div className="grid grid-cols-3 gap-3">
                                 {DIFFICULTIES.map((d) => (
@@ -91,7 +91,7 @@ export function HomeScreen({ onPlay, stats, theme, onToggleTheme }: Props) {
                     onClick={() => onPlay(era, difficulty)}
                     className="rounded-xl w-full bg-amber px-10 py-3.5 font-display text-[16px] font-semibold uppercase tracking-[0.15em] text-ink shadow-cta"
                 >
-                    Jogar
+                    Play
                 </button>
             </div>
         </section>

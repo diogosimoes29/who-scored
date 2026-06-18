@@ -57,7 +57,7 @@ Escala: wordmark ~54px / títulos 24–30px / nomes 14–16px / corpo 15px / lab
 - Contraste suficiente do texto sobre fundos escuros.
 
 ### Cópia (microtexto)
-- PT-PT, voz ativa, frase no caso normal. O botão mantém o nome em toda a ação.
+- UI em inglês, voz ativa, frase no caso normal. O botão mantém o nome em toda a ação.
 - Erros dão direção, não desculpas. Ecrã vazio é um convite a agir.
 - Exemplos: CTA "Jogar"; campo "Procurar jogador…"; progresso "3 de 6"; resultado "6 de 6 marcadores".
 
@@ -95,7 +95,7 @@ type Match = {
   round: string;        // "Final", "Matchday 1"…
   group?: string;
   ground: string;
-  team1: string; team2: string;          // nomes em PT (via teams-pt.ts)
+  team1: string; team2: string;          // nomes em inglês (via teams.ts)
   iso1?: string; iso2?: string;          // código p/ bandeira
   score: { ft:[number,number]; ht?:[number,number]; et?:[number,number]; p?:[number,number] };
   goals: Goal[];        // já ordenados por minuto; "lugares" = goals.length
@@ -115,7 +115,7 @@ type GameState = {
 1. Para cada ano 1930…2026: fetch do `worldcup.json` (raw GitHub).
 2. Mapear cada `match` para o tipo `Match`; achatar `goals1`/`goals2` em `goals[]` com `team` e `key`.
 3. **Filtrar** jogos sem golos ou sem dados de marcador.
-4. Mapear `team1`/`team2` para PT-PT + ISO via `teams-pt.ts`.
+4. Mapear `team1`/`team2` para nome (inglês) + ISO via `teams.ts`.
 5. Escrever `src/data/matches.json` e `src/data/players.json` (união de marcadores, deduplicada por `key`).
 
 ### Lógica de jogo

@@ -1,12 +1,3 @@
-// Validação tolerante do palpite (DESIGN.md / PRD 5.4). Função pura e testável.
-//
-// Dado um palpite, os golos do jogo e o que já está revelado, devolve o índice
-// do golo a revelar (o mais cedo ainda por descobrir desse jogador) ou null.
-//
-// Ordem de correspondência: exata > apelido inequívoco > fuzzy apertado.
-// Como `goals` vem ordenado por minuto, o primeiro candidato por revelar é
-// sempre o golo mais cedo.
-
 import Fuse from "fuse.js";
 import { normalize } from "./normalize";
 import type { Goal } from "../types";
@@ -14,38 +5,34 @@ import type { Goal } from "../types";
 type Candidate = { goal: Goal; index: number };
 
 export function findGoalToReveal(
-  guess: string,
-  goals: Goal[],
-  revealed: boolean[]
+    guess: string,
+    goals: Goal[],
+    revealed: boolean[]
 ): number | null {
-  const nk = normalize(guess);
-  if (!nk) return null;
+    const nk = normalize(guess);
+    if (!nk) return null;
 
-  const open: Candidate[] = goals
-    .map((goal, index) => ({ goal, index }))
-    .filter((c) => !revealed[c.index]);
-  if (open.length === 0) return null;
+    const open: Candidate[] = goals
+        .map((goal, index) => ({ goal, index }))
+        .filter((c) => !revealed[c.index]);
+    if (open.length === 0) return null;
 
-  // 1) Correspondência exata da chave completa.
-  const exact = open.find((c) => c.goal.key === nk);
-  if (exact) return exact.index;
+    const exact = open.find((c) => c.goal.key === nk);
+    if (exact) return exact.index;
 
-  // 2) Apelido / token: o palpite é uma palavra da chave (ex.: "messi").
-  //    Só aceite se identificar inequivocamente um único marcador.
-  const byToken = open.filter((c) => c.goal.key.split(" ").includes(nk));
-  if (byToken.length > 0) {
-    const distinct = new Set(byToken.map((c) => c.goal.key));
-    if (distinct.size === 1) return byToken[0]!.index;
-    return null; // ambíguo → não adivinha (evita falso positivo)
-  }
+    const byToken = open.filter((c) => c.goal.key.split(" ").includes(nk));
+    if (byToken.length > 0) {
+        const distinct = new Set(byToken.map((c) => c.goal.key));
+        if (distinct.size === 1) return byToken[0]!.index;
+        return null;
+    }
 
-  // 3) Fuzzy apertado sobre as chaves por revelar (tolera erros pequenos).
-  const fuse = new Fuse(open, {
-    keys: ["goal.key"],
-    threshold: 0.2,
-    ignoreLocation: true,
-    minMatchCharLength: 3,
-  });
-  const best = fuse.search(nk)[0];
-  return best ? best.item.index : null;
+    const fuse = new Fuse(open, {
+        keys: ["goal.key"],
+        threshold: 0.2,
+        ignoreLocation: true,
+        minMatchCharLength: 3,
+    });
+    const best = fuse.search(nk)[0];
+    return best ? best.item.index : null;
 }

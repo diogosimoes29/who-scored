@@ -1,16 +1,14 @@
-// Modos de dificuldade (ortogonais à era). Controlam COMO se joga.
-
 export type DifficultyId = "beginner" | "normal" | "hard";
 
 export type Difficulty = {
   id: DifficultyId;
   emoji: string;
-  label: string; // PT-PT
-  desc: string; // descrição curta no tile
+  label: string;
+  desc: string;
 };
 
 export const DIFFICULTIES: Difficulty[] = [
-  { id: "beginner", emoji: "🟢", label: "Principiante", desc: "Escolha múltipla" },
-  { id: "normal", emoji: "🟡", label: "Normal", desc: "Tentativas ilimitadas" },
-  { id: "hard", emoji: "🔴", label: "Difícil", desc: "2 tentativas" },
+  { id: "beginner", emoji: "🟢", label: "Beginner", desc: "Multiple choice" },
+  { id: "normal", emoji: "🟡", label: "Normal", desc: "Unlimited guesses" },
+  { id: "hard", emoji: "🔴", label: "Hard", desc: "2 guesses" },
 ];

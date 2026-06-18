@@ -71,7 +71,7 @@ function Flag({ iso, name }: { iso?: string; name: string }) {
     return (
         <img
             src={src}
-            alt={`Bandeira: ${name}`}
+            alt={`Flag: ${name}`}
             width={28}
             height={21}
             loading="lazy"

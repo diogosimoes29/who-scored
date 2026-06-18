@@ -34,7 +34,7 @@ npm run lint         # eslint
 src/
   App.tsx            # máquina de estados: home → game → result
   types.ts           # Match, Goal, PlayerEntry, GameState
-  data/              # matches.json + players.json (GERADOS) + teams-pt.ts (mapa nome→PT/ISO)
+  data/              # matches.json + players.json (GERADOS) + teams.ts (mapa nome→EN/ISO) + player-aliases.ts
   lib/               # normalize.ts, search.ts (Fuse), scoring.ts
   hooks/             # useGame.ts, useMatchPool.ts
   components/        # HomeScreen, GameScreen, MatchHeader, ScorerSlot, PlayerSearch, ResultScreen
@@ -65,4 +65,5 @@ scripts/
 - TypeScript strict; sem `any` salvo justificação.
 - Sem `localStorage`/`sessionStorage` em artefactos de demonstração; na app real, `localStorage` é ok.
 - Quando houver dúvida entre duas abordagens, explica ambas e deixa-me escolher.
-- Português de Portugal em toda a UI e nos comentários.
+- UI em **inglês** (textos visíveis e dados, ex.: nomes de seleções em `teams.ts`).
+  Comentários de código em português, como o resto do código.
