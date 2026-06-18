@@ -3,7 +3,7 @@
 
 import type { Match } from "../types";
 import {
-  flagEmoji,
+  flagUrl,
   formatDate,
   mainScore,
   roundLabel,
@@ -52,17 +52,33 @@ function Team({
   iso?: string;
   align: "left" | "right";
 }) {
+  const flag = <Flag iso={iso} name={name} />;
   return (
     <div
       className={`flex min-w-0 items-center gap-2 ${
         align === "right" ? "justify-end text-right" : "justify-start text-left"
       }`}
     >
-      {align === "left" && <span className="text-2xl">{flagEmoji(iso)}</span>}
+      {align === "left" && flag}
       <span className="truncate font-display font-semibold uppercase tracking-[0.08em] text-[15px] text-chalk">
         {name}
       </span>
-      {align === "right" && <span className="text-2xl">{flagEmoji(iso)}</span>}
+      {align === "right" && flag}
     </div>
+  );
+}
+
+function Flag({ iso, name }: { iso?: string; name: string }) {
+  const src = flagUrl(iso);
+  if (!src) return null;
+  return (
+    <img
+      src={src}
+      alt={`Bandeira: ${name}`}
+      width={28}
+      height={21}
+      loading="lazy"
+      className="h-[21px] w-7 shrink-0 rounded-sm object-cover ring-1 ring-line"
+    />
   );
 }

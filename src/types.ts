@@ -39,6 +39,6 @@ export type GameStatus = "playing" | "won" | "revealed";
 export type GameState = {
   match: Match;
   revealed: boolean[]; // por golo
-  wrongGuesses: number;
+  wrongGuesses: string[]; // nomes dos palpites errados (sem repetições)
   status: GameStatus;
 };

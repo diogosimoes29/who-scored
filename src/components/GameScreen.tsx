@@ -21,93 +21,96 @@ type Props = {
 type Toast = { text: string; tone: "hit" | "miss" } | null;
 
 export function GameScreen({
-  state,
-  found,
-  total,
-  search,
-  onGuess,
-  onGiveUp,
+    state,
+    found,
+    total,
+    search,
+    onGuess,
+    onGiveUp,
 }: Props) {
-  const { match, revealed, wrongGuesses, status } = state;
-  const [toast, setToast] = useState<Toast>(null);
-  const timer = useRef<number | undefined>(undefined);
+    const { match, revealed, wrongGuesses, status } = state;
+    const [toast, setToast] = useState<Toast>(null);
+    const timer = useRef<number | undefined>(undefined);
 
-  useEffect(() => () => window.clearTimeout(timer.current), []);
+    useEffect(() => () => window.clearTimeout(timer.current), []);
 
-  function handleGuess(value: string) {
-    const r = onGuess(value);
-    if (r.type === "noop") return;
-    setToast(
-      r.type === "hit"
-        ? { text: "Certo!", tone: "hit" }
-        : { text: "Não foi esse", tone: "miss" }
+    function handleGuess(value: string) {
+        const r = onGuess(value);
+        if (r.type === "noop") return;
+        setToast(
+            r.type === "hit"
+                ? { text: "Certo!", tone: "hit" }
+                : { text: "Não foi esse", tone: "miss" }
+        );
+        window.clearTimeout(timer.current);
+        timer.current = window.setTimeout(() => setToast(null), 1600);
+    }
+
+    return (
+        <section className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-4 px-4 py-5">
+            <MatchHeader match={match} />
+
+            <div className="flex items-center justify-between">
+                <h2 className="font-display uppercase tracking-[0.2em] text-[11px] text-muted">
+                Marcadores
+                </h2>
+                <span className="font-mono text-[13px] text-amber-soft">
+                {found} de {total}
+                </span>
+            </div>
+
+            <ul className="flex flex-col gap-2">
+                {match.goals.map((goal, i) => (
+                <li key={i}>
+                    <ScorerSlot
+                    goal={goal}
+                    iso1={match.iso1}
+                    iso2={match.iso2}
+                    team1={match.team1}
+                    team2={match.team2}
+                    revealed={revealed[i] ?? false}
+                    />
+                </li>
+                ))}
+            </ul>
+
+            <div className="flex flex-col items-start justify-between gap-3 font-mono text-[12px] text-muted">
+                <div className="flex w-full flex-row place-content-between gap-3">
+                    <span className="min-w-0">
+                        Palpites errados: <span className="text-red">{wrongGuesses.length}</span>                    
+                    </span>
+                    {/* região viva para anunciar feedback a leitores de ecrã */}
+                    <span
+                        aria-live="polite"
+                        className={`min-h-[1.2em] shrink-0 ${
+                            toast?.tone === "hit"
+                            ? "text-lime"
+                            : toast?.tone === "miss"
+                                ? "text-red"
+                                : ""
+                        }`}
+                    >
+                        {toast?.text ?? ""}
+                    </span>
+                </div>
+                <span className="text-red">{wrongGuesses.join(", ")}</span>
+            </div>
+
+            <div className="mt-auto flex flex-col gap-3 pt-2">
+                <PlayerSearch
+                    search={search}
+                    onGuess={handleGuess}
+                    disabled={status !== "playing"}
+                />
+                <button
+                    type="button"
+                    onClick={onGiveUp}
+                    disabled={status !== "playing"}
+                    className="self-center font-display uppercase tracking-[0.15em] text-[12px] text-muted underline-offset-4 hover:text-chalk hover:underline disabled:opacity-40"
+                >
+                    Desistir
+                </button>
+            </div>
+        </section>
     );
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setToast(null), 1600);
-  }
-
-  return (
-    <section className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-4 px-4 py-5">
-      <MatchHeader match={match} />
-
-      <div className="flex items-center justify-between">
-        <h2 className="font-display uppercase tracking-[0.2em] text-[11px] text-muted">
-          Marcadores
-        </h2>
-        <span className="font-mono text-[13px] text-amber-soft">
-          {found} de {total}
-        </span>
-      </div>
-
-      <ul className="flex flex-col gap-2">
-        {match.goals.map((goal, i) => (
-          <li key={i}>
-            <ScorerSlot
-              goal={goal}
-              iso1={match.iso1}
-              iso2={match.iso2}
-              team1={match.team1}
-              team2={match.team2}
-              revealed={revealed[i] ?? false}
-            />
-          </li>
-        ))}
-      </ul>
-
-      <div className="flex items-center justify-between font-mono text-[12px] text-muted">
-        <span>
-          Palpites errados: <span className="text-red">{wrongGuesses}</span>
-        </span>
-        {/* região viva para anunciar feedback a leitores de ecrã */}
-        <span
-          aria-live="polite"
-          className={`min-h-[1.2em] ${
-            toast?.tone === "hit"
-              ? "text-lime"
-              : toast?.tone === "miss"
-                ? "text-red"
-                : ""
-          }`}
-        >
-          {toast?.text ?? ""}
-        </span>
-      </div>
-
-      <div className="mt-auto flex flex-col gap-3 pt-2">
-        <PlayerSearch
-          search={search}
-          onGuess={handleGuess}
-          disabled={status !== "playing"}
-        />
-        <button
-          type="button"
-          onClick={onGiveUp}
-          disabled={status !== "playing"}
-          className="self-center font-display uppercase tracking-[0.15em] text-[12px] text-muted underline-offset-4 hover:text-chalk hover:underline disabled:opacity-40"
-        >
-          Desistir
-        </button>
-      </div>
-    </section>
-  );
 }

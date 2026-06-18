@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { GameState, Goal, Match } from "../types";
 import { findGoalToReveal } from "../lib/validate";
+import { normalize } from "../lib/normalize";
 
 export type GuessResult =
   | { type: "hit"; index: number; goal: Goal }
@@ -14,7 +15,7 @@ function init(match: Match): GameState {
   return {
     match,
     revealed: match.goals.map(() => false),
-    wrongGuesses: 0,
+    wrongGuesses: [],
     status: "playing",
   };
 }
@@ -35,7 +36,14 @@ export function useGame(match: Match) {
       if (state.status !== "playing") return { type: "noop" };
       const idx = findGoalToReveal(raw, state.match.goals, state.revealed);
       if (idx === null) {
-        setState((p) => ({ ...p, wrongGuesses: p.wrongGuesses + 1 }));
+        const label = raw.trim();
+        const key = normalize(label);
+        setState((p) =>
+          // ignora repetições do mesmo palpite errado (não penaliza 2x)
+          key === "" || p.wrongGuesses.some((w) => normalize(w) === key)
+            ? p
+            : { ...p, wrongGuesses: [...p.wrongGuesses, label] }
+        );
         return { type: "miss" };
       }
       setFound((n) => n + 1);

@@ -11,7 +11,7 @@ import { MatchHeader } from "./MatchHeader";
 type Props = {
   match: Match;
   found: number;
-  wrongGuesses: number;
+  wrongGuesses: string[];
   onPlayAgain: () => void;
   onHome: () => void;
 };
@@ -23,7 +23,7 @@ export function ResultScreen({
   onPlayAgain,
   onHome,
 }: Props) {
-  const result = computeScore(found, match.goals.length, wrongGuesses);
+  const result = computeScore(found, match.goals.length, wrongGuesses.length);
   const [shared, setShared] = useState(false);
 
   async function share() {
@@ -78,6 +78,15 @@ export function ResultScreen({
           </li>
         ))}
       </ul>
+
+      {wrongGuesses.length > 0 && (
+        <div className="font-mono text-[12px] text-muted">
+          <span className="uppercase tracking-[0.15em] text-[11px]">
+            Palpites errados ({wrongGuesses.length})
+          </span>
+          <p className="mt-1 text-red">{wrongGuesses.join(", ")}</p>
+        </div>
+      )}
 
       <div className="mt-auto flex flex-col gap-2 pt-2">
         <button

@@ -39,15 +39,14 @@ export function teamTag(name: string, iso?: string): string {
   return name.slice(0, 3).toUpperCase();
 }
 
-/** Bandeira emoji a partir do ISO alpha-2 (sem subdivisões). */
-export function flagEmoji(iso?: string): string {
-  if (!iso || iso.includes("-") || iso.length !== 2) return "🏳️";
-  const A = 0x1f1e6;
-  const cc = iso.toUpperCase();
-  return String.fromCodePoint(
-    A + (cc.charCodeAt(0) - 65),
-    A + (cc.charCodeAt(1) - 65)
-  );
+/**
+ * URL da bandeira (flagcdn.com, SVG) a partir do código ISO. Suporta
+ * subdivisões (gb-eng, gb-sct…). Emojis de bandeira não renderizam no
+ * Windows/Chrome, por isso usamos imagens. Devolve null se não houver ISO.
+ */
+export function flagUrl(iso?: string): string | null {
+  if (!iso) return null;
+  return `https://flagcdn.com/${iso.toLowerCase()}.svg`;
 }
 
 /** Etiquetas de um golo: "(g.p.)" penálti, "(p.b.)" autogolo. */

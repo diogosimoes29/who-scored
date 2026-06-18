@@ -12,7 +12,9 @@
       "Bash(cd /tmp)",
       "Bash(curl -s \"https://raw.githubusercontent.com/openfootball/worldcup.json/master/2010/worldcup.json\" -o 2010.json)",
       "Bash(node -e ' *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(command -v chromium-cli)",
+      "PowerShell(npm run *)"
     ]
   }
 }
