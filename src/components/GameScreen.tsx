@@ -1,6 +1,3 @@
-// Ecrã de jogo (DESIGN.md / PRD 9.2). Cabeçalho-placard, lugares de marcador,
-// contador de progresso e de erros, pesquisa com autocomplete e "Desistir".
-
 import { useEffect, useRef, useState } from "react";
 import type { GameState } from "../types";
 import type { GuessResult } from "../hooks/useGame";
@@ -13,16 +10,16 @@ import { AppHeader } from "./AppHeader";
 import { WrongGuesses } from "./WrongGuesses";
 
 type Props = {
-  state: GameState;
-  found: number;
-  total: number;
-  search: SearchFn;
-  streak: number;
-  theme: Theme;
-  onToggleTheme: () => void;
-  onHome: () => void;
-  onGuess: (value: string) => GuessResult;
-  onGiveUp: () => void;
+    state: GameState;
+    found: number;
+    total: number;
+    search: SearchFn;
+    streak: number;
+    theme: Theme;
+    onToggleTheme: () => void;
+    onHome: () => void;
+    onGuess: (value: string) => GuessResult;
+    onGiveUp: () => void;
 };
 
 type Toast = { text: string; tone: "hit" | "miss" } | null;

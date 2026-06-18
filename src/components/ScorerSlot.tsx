@@ -1,18 +1,14 @@
-// Lugar de marcador (DESIGN.md): etiqueta de equipa, minuto (âmbar-soft) e nome
-// oculto ("? ? ?"). Ao revelar: borda lime, nome a verde, etiquetas de golo.
-
 import type { Goal } from "../types";
 import { goalTags, teamTag } from "../lib/format";
 
 type Props = {
-  goal: Goal;
-  iso1?: string;
-  iso2?: string;
-  team1: string;
-  team2: string;
-  revealed: boolean;
-  /** revelado por acerto (lime) vs por desistir/resultado (neutro). */
-  byGuess?: boolean;
+    goal: Goal;
+    iso1?: string;
+    iso2?: string;
+    team1: string;
+    team2: string;
+    revealed: boolean;
+    byGuess?: boolean;
 };
 
 export function ScorerSlot({
