@@ -8,8 +8,11 @@ import { useStats } from "./hooks/useStats";
 import { useTheme } from "./hooks/useTheme";
 import { createPlayerSearch } from "./lib/search";
 import { MODES, type GameMode } from "./lib/modes";
+import { DIFFICULTIES, type Difficulty } from "./lib/difficulties";
 import type { PlayerEntry } from "./types";
 import playersData from "./data/players.json";
+
+const NORMAL = DIFFICULTIES.find((d) => d.id === "normal")!;
 
 type Screen = "home" | "playing" | "result";
 
@@ -26,14 +29,16 @@ export default function App() {
 
     const [screen, setScreen] = useState<Screen>("home");
     const [mode, setMode] = useState<GameMode>(MODES[0]!);
+    const [difficulty, setDifficulty] = useState<Difficulty>(NORMAL);
     const [match, setMatch] = useState(() => pool.next(MODES[0]!));
-    const game = useGame(match);
+    const game = useGame(match, difficulty.id);
     const recorded = useRef(false);
 
-    // Sem argumento (ex.: "Jogar outra vez") mantém o modo atual.
-    const startNew = (m: GameMode = mode) => {
+    // Sem argumentos (ex.: "Próximo") mantém a era e a dificuldade atuais.
+    const startNew = (m: GameMode = mode, d: Difficulty = difficulty) => {
         recorded.current = false;
         setMode(m);
+        setDifficulty(d);
         setMatch(pool.next(m));
         setScreen("playing");
     };
@@ -60,7 +65,14 @@ export default function App() {
     }, [screen, status, record]);
 
     if (screen === "home") {
-        return <HomeScreen stats={stats} onPlay={startNew} />;
+        return (
+            <HomeScreen
+                stats={stats}
+                onPlay={startNew}
+                theme={theme}
+                onToggleTheme={toggleTheme}
+            />
+        );
     }
 
     if (screen === "result") {
@@ -69,6 +81,7 @@ export default function App() {
                 match={match}
                 found={game.found}
                 wrongGuesses={game.state.wrongGuesses}
+                revealed={game.state.revealed}
                 streak={stats.streak}
                 theme={theme}
                 onToggleTheme={toggleTheme}
@@ -84,6 +97,7 @@ export default function App() {
             found={game.found}
             total={game.total}
             search={search}
+            difficulty={difficulty.id}
             streak={stats.streak}
             theme={theme}
             onToggleTheme={toggleTheme}

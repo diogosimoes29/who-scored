@@ -34,7 +34,8 @@ export type Match = {
 
 export type PlayerEntry = { key: string; label: string }; // dicionário de pesquisa
 
-export type GameStatus = "playing" | "won" | "revealed";
+// "lost" = derrota no modo difícil (cartão vermelho); não revela o que faltou.
+export type GameStatus = "playing" | "won" | "revealed" | "lost";
 
 export type GameState = {
   match: Match;

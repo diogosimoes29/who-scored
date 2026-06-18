@@ -12,6 +12,7 @@ type Props = {
     match: Match;
     found: number;
     wrongGuesses: string[];
+    revealed: boolean[];
     streak: number;
     theme: Theme;
     onToggleTheme: () => void;
@@ -23,6 +24,7 @@ export function ResultScreen({
     match,
     found,
     wrongGuesses,
+    revealed,
     streak,
     theme,
     onToggleTheme,
@@ -48,7 +50,7 @@ export function ResultScreen({
     }
 
     return (
-        <section className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-4 px-4 py-5">
+        <section className="mx-auto flex h-dvh w-full max-w-5xl flex-col gap-4 overflow-hidden px-4 py-5">
             <AppHeader
                 streak={streak}
                 theme={theme}
@@ -76,7 +78,7 @@ export function ResultScreen({
 
             <MatchHeader match={match} />
 
-            <ul className="flex flex-col gap-2">
+            <ul className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
                 {match.goals.map((goal, i) => (
                 <li key={i}>
                     <ScorerSlot
@@ -85,7 +87,7 @@ export function ResultScreen({
                     iso2={match.iso2}
                     team1={match.team1}
                     team2={match.team2}
-                    revealed
+                    revealed={revealed[i] ?? false}
                     byGuess={false}
                     />
                 </li>
@@ -103,7 +105,7 @@ export function ResultScreen({
                 </div>
             )}
 
-            <div className="mt-auto flex flex-col gap-2 pt-2">
+            <div className="flex flex-col gap-2 pt-2">
                 <button
                     type="button"
                     onClick={onPlayAgain}

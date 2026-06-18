@@ -3,8 +3,11 @@
 
 import { useCallback, useState } from "react";
 import type { GameState, Goal, Match } from "../types";
+import type { DifficultyId } from "../lib/difficulties";
 import { findGoalToReveal } from "../lib/validate";
 import { normalize } from "../lib/normalize";
+
+const HARD_MAX_WRONG = 2; // difícil: 2 erros (amarelo, depois vermelho = fim)
 
 export type GuessResult =
   | { type: "hit"; index: number; goal: Goal }
@@ -20,7 +23,7 @@ function init(match: Match): GameState {
   };
 }
 
-export function useGame(match: Match) {
+export function useGame(match: Match, difficulty: DifficultyId = "normal") {
   const [state, setState] = useState<GameState>(() => init(match));
   // Golos revelados por acerto (≠ revelados por "Desistir"). Base da pontuação.
   const [found, setFound] = useState(0);
@@ -42,12 +45,16 @@ export function useGame(match: Match) {
       if (idx === null) {
         const label = raw.trim();
         const key = normalize(label);
-        setState((p) =>
+        setState((p) => {
           // ignora repetições do mesmo palpite errado (não penaliza 2x)
-          key === "" || p.wrongGuesses.some((w) => normalize(w) === key)
-            ? p
-            : { ...p, wrongGuesses: [...p.wrongGuesses, label] }
-        );
+          if (key === "" || p.wrongGuesses.some((w) => normalize(w) === key)) {
+            return p;
+          }
+          const wrongGuesses = [...p.wrongGuesses, label];
+          // Difícil: ao 2.º erro (cartão vermelho) o jogo termina sem revelar.
+          const lost = difficulty === "hard" && wrongGuesses.length >= HARD_MAX_WRONG;
+          return { ...p, wrongGuesses, status: lost ? "lost" : p.status };
+        });
         return { type: "miss" };
       }
       setFound((n) => n + 1);
@@ -59,7 +66,7 @@ export function useGame(match: Match) {
       });
       return { type: "hit", index: idx, goal: state.match.goals[idx]! };
     },
-    [state]
+    [state, difficulty]
   );
 
   const giveUp = useCallback(() => {
