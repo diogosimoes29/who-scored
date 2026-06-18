@@ -7,6 +7,7 @@ import { useGame } from "./hooks/useGame";
 import { useStats } from "./hooks/useStats";
 import { useTheme } from "./hooks/useTheme";
 import { createPlayerSearch } from "./lib/search";
+import { MODES, type GameMode } from "./lib/modes";
 import type { PlayerEntry } from "./types";
 import playersData from "./data/players.json";
 
@@ -24,13 +25,16 @@ export default function App() {
     );
 
     const [screen, setScreen] = useState<Screen>("home");
-    const [match, setMatch] = useState(() => pool.next());
+    const [mode, setMode] = useState<GameMode>(MODES[0]!);
+    const [match, setMatch] = useState(() => pool.next(MODES[0]!));
     const game = useGame(match);
     const recorded = useRef(false);
 
-    const startNew = () => {
+    // Sem argumento (ex.: "Jogar outra vez") mantém o modo atual.
+    const startNew = (m: GameMode = mode) => {
         recorded.current = false;
-        setMatch(pool.next());
+        setMode(m);
+        setMatch(pool.next(m));
         setScreen("playing");
     };
 
@@ -68,7 +72,7 @@ export default function App() {
                 streak={stats.streak}
                 theme={theme}
                 onToggleTheme={toggleTheme}
-                onPlayAgain={startNew}
+                onPlayAgain={() => startNew()}
                 onHome={goHome}
             />
         );

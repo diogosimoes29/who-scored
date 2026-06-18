@@ -1,6 +1,7 @@
 import type { Stats } from "../hooks/useStats";
+import { MODES, type GameMode } from "../lib/modes";
 
-type Props = { onPlay: () => void; stats: Stats };
+type Props = { onPlay: (mode: GameMode) => void; stats: Stats };
 
 export function HomeScreen({ onPlay, stats }: Props) {
     return (
@@ -15,13 +16,26 @@ export function HomeScreen({ onPlay, stats }: Props) {
                 </p>
             </div>
 
-            <button
-                type="button"
-                onClick={onPlay}
-                className="rounded-xl bg-amber px-10 py-3.5 font-display text-[16px] font-semibold uppercase tracking-[0.15em] text-ink shadow-cta"
-            >
-                Jogar
-            </button>
+            <div className="grid w-full grid-cols-4 gap-3">
+                {MODES.map((mode) => (
+                    <button
+                        key={mode.id}
+                        type="button"
+                        onClick={() => onPlay(mode)}
+                        className="flex flex-col items-center gap-1.5 rounded-xl border border-line bg-panel px-2 py-4 transition-colors hover:border-amber"
+                    >
+                        <span className="text-3xl leading-none" role="img" aria-hidden="true">
+                            {mode.emoji}
+                        </span>
+                        <span className="font-display text-[14px] font-bold uppercase tracking-[0.06em] text-chalk">
+                            {mode.label}
+                        </span>
+                        <span className="font-mono text-[11px] text-muted">
+                            {mode.years}
+                        </span>
+                    </button>
+                ))}
+            </div>
 
             {stats.played > 0 && (
                 <p className="font-mono text-[13px] text-muted">
