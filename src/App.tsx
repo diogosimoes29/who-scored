@@ -7,6 +7,7 @@ import { ResultScreen } from "./components/ResultScreen";
 import { useMatchPool } from "./hooks/useMatchPool";
 import { useGame } from "./hooks/useGame";
 import { useStats } from "./hooks/useStats";
+import { useTheme } from "./hooks/useTheme";
 import { createPlayerSearch } from "./lib/search";
 import type { PlayerEntry } from "./types";
 import playersData from "./data/players.json";
@@ -17,7 +18,8 @@ const REVEAL_DELAY = 900; // ms a mostrar o último golo antes do resultado
 
 export default function App() {
   const pool = useMatchPool();
-  const { stats, record } = useStats();
+  const { stats, record, resetStreak } = useStats();
+  const { theme, toggle: toggleTheme } = useTheme();
   const search = useMemo(
     () => createPlayerSearch(playersData as PlayerEntry[]),
     []
@@ -32,6 +34,12 @@ export default function App() {
     recorded.current = false;
     setMatch(pool.next());
     setScreen("playing");
+  };
+
+  // Voltar ao início zera a sequência atual (o melhor fica persistido).
+  const goHome = () => {
+    resetStreak();
+    setScreen("home");
   };
 
   // Fim de jogo: regista estatística uma vez e transita para o resultado.
@@ -61,8 +69,11 @@ export default function App() {
         match={match}
         found={game.found}
         wrongGuesses={game.state.wrongGuesses}
+        streak={stats.streak}
+        theme={theme}
+        onToggleTheme={toggleTheme}
         onPlayAgain={startNew}
-        onHome={() => setScreen("home")}
+        onHome={goHome}
       />
     );
   }
@@ -73,6 +84,10 @@ export default function App() {
       found={game.found}
       total={game.total}
       search={search}
+      streak={stats.streak}
+      theme={theme}
+      onToggleTheme={toggleTheme}
+      onHome={goHome}
       onGuess={game.guess}
       onGiveUp={game.giveUp}
     />

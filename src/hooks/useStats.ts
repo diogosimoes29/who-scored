@@ -48,5 +48,15 @@ export function useStats() {
     });
   }, []);
 
-  return { stats, record };
+  // Volta ao início: zera a sequência atual, mantém melhor e jogos jogados.
+  const resetStreak = useCallback(() => {
+    setStats((prev) => {
+      if (prev.streak === 0) return prev;
+      const next: Stats = { ...prev, streak: 0 };
+      save(next);
+      return next;
+    });
+  }, []);
+
+  return { stats, record, resetStreak };
 }

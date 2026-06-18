@@ -3,15 +3,21 @@
 
 import { useState } from "react";
 import type { Match } from "../types";
+import type { Theme } from "../hooks/useTheme";
 import { computeScore } from "../lib/scoring";
 import { buildShareText } from "../lib/share";
 import { ScorerSlot } from "./ScorerSlot";
 import { MatchHeader } from "./MatchHeader";
+import { AppHeader } from "./AppHeader";
+import { WrongGuesses } from "./WrongGuesses";
 
 type Props = {
   match: Match;
   found: number;
   wrongGuesses: string[];
+  streak: number;
+  theme: Theme;
+  onToggleTheme: () => void;
   onPlayAgain: () => void;
   onHome: () => void;
 };
@@ -20,6 +26,9 @@ export function ResultScreen({
   match,
   found,
   wrongGuesses,
+  streak,
+  theme,
+  onToggleTheme,
   onPlayAgain,
   onHome,
 }: Props) {
@@ -42,7 +51,14 @@ export function ResultScreen({
   }
 
   return (
-    <section className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-4 px-4 py-5">
+    <section className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-4 px-4 py-5">
+      <AppHeader
+        streak={streak}
+        theme={theme}
+        onToggleTheme={onToggleTheme}
+        onHome={onHome}
+      />
+
       <div className="text-center">
         <p className="font-mono text-[15px] text-amber-soft">
           {result.found} de {result.total} marcadores
@@ -84,7 +100,9 @@ export function ResultScreen({
           <span className="uppercase tracking-[0.15em] text-[11px]">
             Palpites errados ({wrongGuesses.length})
           </span>
-          <p className="mt-1 text-red">{wrongGuesses.join(", ")}</p>
+          <div className="mt-1">
+            <WrongGuesses guesses={wrongGuesses} />
+          </div>
         </div>
       )}
 

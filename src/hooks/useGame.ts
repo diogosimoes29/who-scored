@@ -1,7 +1,7 @@
 // Lógica de jogo (DESIGN.md). Mantém o GameState de um Match e expõe ações.
 // Validação tolerante delegada em lib/validate.ts (pura).
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import type { GameState, Goal, Match } from "../types";
 import { findGoalToReveal } from "../lib/validate";
 import { normalize } from "../lib/normalize";
@@ -25,11 +25,15 @@ export function useGame(match: Match) {
   // Golos revelados por acerto (≠ revelados por "Desistir"). Base da pontuação.
   const [found, setFound] = useState(0);
 
-  // Recomeça quando muda o jogo (nova partida).
-  useEffect(() => {
+  // Recomeça quando muda o jogo (nova partida). Reposição SÍNCRONA durante o
+  // render (não em useEffect): evita um render intermédio com o estado "won" do
+  // jogo anterior, que fazia a sequência ser contada a dobrar.
+  const [prevMatch, setPrevMatch] = useState(match);
+  if (match !== prevMatch) {
+    setPrevMatch(match);
     setState(init(match));
     setFound(0);
-  }, [match]);
+  }
 
   const guess = useCallback(
     (raw: string): GuessResult => {

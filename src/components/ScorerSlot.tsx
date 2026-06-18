@@ -16,47 +16,48 @@ type Props = {
 };
 
 export function ScorerSlot({
-  goal,
-  iso1,
-  iso2,
-  team1,
-  team2,
-  revealed,
-  byGuess = true,
+    goal,
+    iso1,
+    iso2,
+    team1,
+    team2,
+    revealed,
+    byGuess = true,
 }: Props) {
-  const tag =
-    goal.team === 1 ? teamTag(team1, iso1) : teamTag(team2, iso2);
+    const tag = goal.team === 1 
+        ? teamTag(team1, iso1)
+        : teamTag(team2, iso2);
 
-  return (
-    <div
-      className={`flex items-center gap-3 rounded-xl border bg-panel px-3 py-2.5 transition-colors ${
-        revealed && byGuess ? "border-lime/70" : "border-line"
-      }`}
-    >
-      <span className="w-9 shrink-0 font-display text-[11px] uppercase tracking-[0.15em] text-muted">
-        {tag}
-      </span>
-      <span className="w-12 shrink-0 text-right font-mono text-sm text-amber-soft">
-        {goal.minute}'
-      </span>
-      <span className="min-w-0 flex-1">
-        {revealed ? (
-          <span
-            className={`block truncate font-display font-semibold uppercase tracking-[0.04em] text-[15px] ${
-              byGuess ? "text-lime" : "text-chalk"
+    return (
+        <div
+            className={`flex items-center gap-3 rounded-xl border bg-panel px-3 py-2.5 transition-colors ${
+                revealed && byGuess ? "border-lime/70" : "border-line"
             }`}
-          >
-            {goal.name}
-            <span className="font-body text-[11px] normal-case tracking-normal text-muted">
-              {goalTags(goal)}
+        >
+            <span className="w-9 shrink-0 font-display text-[11px] uppercase tracking-[0.15em] text-muted">
+                {tag}
             </span>
-          </span>
-        ) : (
-          <span className="font-mono text-base tracking-[0.3em] text-muted/70">
-            ? ? ?
-          </span>
-        )}
-      </span>
-    </div>
-  );
+            <span className="w-12 shrink-0 text-right font-mono text-sm text-amber-soft">
+                {goal.minute}'
+            </span>
+            <span className="min-w-0 flex-1 text-center pr-[6.25rem]">
+                {revealed ? (
+                    <span
+                        className={`block truncate font-display font-semibold uppercase tracking-[0.04em] text-[15px] ${
+                        byGuess ? "text-lime" : "text-chalk"
+                        }`}
+                    >
+                        {goal.name}
+                        <span className="font-body text-[11px] normal-case tracking-normal text-muted">
+                        {goalTags(goal)}
+                        </span>
+                    </span>
+                ) : (
+                    <span className="font-mono text-base tracking-[0.3em] text-muted/70">
+                        ? ? ?
+                    </span>
+                )}
+            </span>
+        </div>
+    );
 }

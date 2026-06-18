@@ -16,6 +16,7 @@ export default {
         red: "var(--red)",
         chalk: "var(--chalk)",
         muted: "var(--muted)",
+        ink: "var(--ink)",
       },
       fontFamily: {
         // Oswald — display condensada (wordmark, equipas, labels, botões)

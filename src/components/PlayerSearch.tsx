@@ -106,7 +106,7 @@ export function PlayerSearch({ search, onGuess, disabled }: Props) {
           type="button"
           disabled={disabled || !query.trim()}
           onClick={() => submit(query)}
-          className="shrink-0 rounded-xl bg-amber px-5 py-3 font-display font-semibold uppercase tracking-[0.1em] text-[14px] text-bg shadow-cta transition-opacity disabled:opacity-40 disabled:shadow-none"
+          className="shrink-0 rounded-xl bg-amber px-5 py-3 font-display font-semibold uppercase tracking-[0.1em] text-[14px] text-ink shadow-cta transition-opacity disabled:opacity-40 disabled:shadow-none"
         >
           Adivinhar
         </button>

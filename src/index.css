@@ -15,6 +15,23 @@
   --red: #ff5b5b; /* erro */
   --chalk: #eaf0ec; /* texto principal */
   --muted: #7e978b; /* texto secundário/labels */
+  --ink: #081310; /* texto escuro sobre acentos (âmbar/vermelho) — fixo nos 2 temas */
+}
+
+/* ── Tema claro (stadium-day) — ativado por .light no <html> ───────────────── */
+html.light {
+  color-scheme: light;
+  --bg: #eef2ef; /* fundo base claro */
+  --bg2: #ffffff; /* fundo de cartão */
+  --panel: #ffffff; /* painéis, slots, inputs */
+  --panel2: #f4f7f5; /* painel elevado */
+  --line: #d2ddd6; /* bordas/divisórias */
+  --amber: #f0a000; /* acento principal (um pouco mais escuro p/ contraste) */
+  --amber-soft: #9a6a00; /* âmbar legível como texto em fundo claro */
+  --lime: #128a4d; /* sucesso legível em claro */
+  --red: #d33b3b; /* erro legível em claro */
+  --chalk: #0f1a16; /* texto principal escuro */
+  --muted: #5b6f65; /* texto secundário */
 }
 
 @layer base {
@@ -61,6 +78,11 @@
   .scoreboard-glow {
     color: var(--amber);
     text-shadow: 0 0 18px rgba(255, 176, 0, 0.45);
+  }
+  /* Em fundo claro o brilho não lê — âmbar escuro e sem glow */
+  html.light .scoreboard-glow {
+    color: var(--amber-soft);
+    text-shadow: none;
   }
 }
 
