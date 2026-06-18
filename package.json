@@ -8,6 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "build:data": "tsx scripts/build-data.ts",
+    "update": "npm run build:data && npm run build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint ."
   },

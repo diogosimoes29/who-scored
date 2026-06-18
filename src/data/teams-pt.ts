@@ -101,6 +101,7 @@ export const TEAMS_PT: Record<string, TeamInfo> = {
   "United States": { pt: "Estados Unidos", iso: "us" },
   USA: { pt: "Estados Unidos", iso: "us" },
   Uruguay: { pt: "Uruguai", iso: "uy" },
+  Uzbekistan: { pt: "Usbequistão", iso: "uz" },
   Wales: { pt: "País de Gales", iso: "gb-wls" },
   Yugoslavia: { pt: "Jugoslávia", iso: "rs" },
   Zaire: { pt: "Zaire", iso: "cd" },
